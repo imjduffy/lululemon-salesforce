@@ -208,35 +208,26 @@
     display: flex;
     align-items: center;
   }
-  .hero::before {
+  /* Full-bleed background photo with dark overlay */
+  .hero-bg-photo {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+  }
+  .hero-bg-photo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center 30%;
+    display: block;
+  }
+  .hero-bg-photo::after {
     content: '';
     position: absolute;
     inset: 0;
     background:
-      radial-gradient(ellipse 70% 90% at 75% 60%, rgba(227,24,55,.15) 0%, transparent 65%),
-      radial-gradient(ellipse 40% 50% at 95% 5%, rgba(227,24,55,.08) 0%, transparent 55%),
-      radial-gradient(ellipse 50% 60% at 20% 90%, rgba(255,255,255,.03) 0%, transparent 60%);
-  }
-  /* Floating motion lines behind hero */
-  .hero-motion-bg {
-    position: absolute;
-    inset: 0;
-    overflow: hidden;
-    pointer-events: none;
-    z-index: 0;
-  }
-  .motion-arc {
-    position: absolute;
-    border-radius: 50%;
-    border: 1px solid rgba(227,24,55,.12);
-    animation: pulse-arc 6s ease-in-out infinite;
-  }
-  .motion-arc:nth-child(1) { width: 600px; height: 600px; top: -200px; right: -100px; animation-delay: 0s; }
-  .motion-arc:nth-child(2) { width: 400px; height: 400px; top: -50px; right: 50px; border-color: rgba(227,24,55,.08); animation-delay: 1.5s; }
-  .motion-arc:nth-child(3) { width: 800px; height: 800px; top: -350px; right: -200px; border-color: rgba(255,255,255,.04); animation-delay: 3s; }
-  @keyframes pulse-arc {
-    0%, 100% { transform: scale(1); opacity: 1; }
-    50% { transform: scale(1.04); opacity: .6; }
+      linear-gradient(90deg, rgba(15,23,42,.92) 0%, rgba(15,23,42,.75) 45%, rgba(15,23,42,.35) 100%),
+      linear-gradient(180deg, rgba(15,23,42,.2) 0%, rgba(15,23,42,.5) 100%);
   }
   .hero-inner {
     position: relative;
@@ -306,32 +297,60 @@
     margin-top: 4px;
     line-height: 1.4;
   }
-  /* Hero Visual — Athletic Scene */
+  /* Hero Visual — Photo Grid */
   .hero-visual {
     display: flex;
     align-items: center;
     justify-content: center;
     position: relative;
+    z-index: 2;
   }
-  .hero-athletic-scene {
+  .hero-photo-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    gap: 12px;
+    width: 100%;
+    max-width: 440px;
+    height: 480px;
+  }
+  .hero-photo-grid .photo-cell {
+    border-radius: 14px;
+    overflow: hidden;
     position: relative;
-    width: 100%;
-    max-width: 480px;
   }
-  .athletic-scene-svg {
+  .hero-photo-grid .photo-cell img {
     width: 100%;
-    height: auto;
-    filter: drop-shadow(0 24px 48px rgba(0,0,0,.4));
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 6s ease;
   }
-  /* Floating stat pills over the scene */
+  .hero-photo-grid .photo-cell:hover img {
+    transform: scale(1.04);
+  }
+  .hero-photo-grid .photo-cell.tall {
+    grid-row: span 2;
+  }
+  .hero-photo-grid .photo-cell::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, transparent 50%, rgba(15,23,42,.35) 100%);
+    pointer-events: none;
+  }
+  /* Floating stat pills */
   .scene-stat {
     position: absolute;
-    background: rgba(15,23,42,.85);
+    background: rgba(15,23,42,.88);
     border: 1px solid rgba(255,255,255,.12);
     border-radius: 12px;
     padding: 12px 18px;
-    backdrop-filter: blur(12px);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
     animation: float 4s ease-in-out infinite;
+    z-index: 3;
+    white-space: nowrap;
   }
   .scene-stat:nth-child(2) { animation-delay: 1.3s; }
   .scene-stat:nth-child(3) { animation-delay: 2.6s; }
@@ -1480,11 +1499,13 @@
      2. HERO
 ══════════════════════════════════════════ -->
 <section class="hero" aria-label="Hero">
-  <!-- Animated arc background -->
-  <div class="hero-motion-bg" aria-hidden="true">
-    <div class="motion-arc"></div>
-    <div class="motion-arc"></div>
-    <div class="motion-arc"></div>
+  <!-- Full-bleed background photo -->
+  <div class="hero-bg-photo" aria-hidden="true">
+    <img
+      src="https://images.unsplash.com/photo-1476480862126-209bfaa8edc8?w=1600&q=80&fit=crop"
+      alt=""
+      loading="eager"
+    />
   </div>
   <div class="hero-inner">
     <div class="hero-content fade-up">
@@ -1523,119 +1544,49 @@
         </div>
       </div>
     </div>
-    <div class="hero-visual fade-up" aria-label="Athletic silhouettes representing lululemon's community in motion">
-      <div class="hero-athletic-scene">
+    <div class="hero-visual fade-up" aria-label="lululemon athletes in motion">
+      <div style="position:relative;width:100%;max-width:440px;">
 
-        <!-- Main SVG Athletic Scene -->
-        <svg class="athletic-scene-svg" viewBox="0 0 480 520" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Athletic figures in motion — runner, yoga practitioner, cyclist">
-
-          <!-- Background glow circle -->
-          <circle cx="240" cy="260" r="220" fill="url(#heroGlow)" opacity="0.5"/>
-
-          <!-- Ground arc -->
-          <ellipse cx="240" cy="490" rx="200" ry="18" fill="rgba(227,24,55,0.08)"/>
-
-          <!-- ── FIGURE 1: RUNNER (left, foreground) ── -->
-          <g transform="translate(60,120)">
-            <!-- Motion trail lines -->
-            <line x1="-30" y1="140" x2="10" y2="138" stroke="rgba(227,24,55,0.3)" stroke-width="1.5" stroke-linecap="round"/>
-            <line x1="-20" y1="148" x2="14" y2="147" stroke="rgba(227,24,55,0.2)" stroke-width="1" stroke-linecap="round"/>
-            <line x1="-10" y1="155" x2="8" y2="155" stroke="rgba(227,24,55,0.15)" stroke-width="0.8" stroke-linecap="round"/>
-            <!-- Head -->
-            <circle cx="80" cy="28" r="18" fill="rgba(255,255,255,0.9)"/>
-            <!-- Torso (leaning forward — running posture) -->
-            <path d="M80 46 L72 95 L68 140" stroke="rgba(255,255,255,0.85)" stroke-width="8" stroke-linecap="round" fill="none"/>
-            <!-- Left arm (pumping back) -->
-            <path d="M76 60 L48 88" stroke="rgba(255,255,255,0.85)" stroke-width="6" stroke-linecap="round"/>
-            <!-- Right arm (pumping forward) -->
-            <path d="M80 56 L108 44" stroke="rgba(255,255,255,0.85)" stroke-width="6" stroke-linecap="round"/>
-            <!-- Left leg (stride back) -->
-            <path d="M72 95 L54 130 L40 165" stroke="rgba(255,255,255,0.85)" stroke-width="7" stroke-linecap="round" fill="none"/>
-            <!-- Right leg (stride forward) -->
-            <path d="M68 95 L88 128 L110 152" stroke="rgba(255,255,255,0.85)" stroke-width="7" stroke-linecap="round" fill="none"/>
-            <!-- Foot detail -->
-            <path d="M40 165 L28 168" stroke="rgba(255,255,255,0.7)" stroke-width="5" stroke-linecap="round"/>
-            <path d="M110 152 L124 148" stroke="rgba(255,255,255,0.7)" stroke-width="5" stroke-linecap="round"/>
-            <!-- Red accent — shirt stripe -->
-            <path d="M72 55 L85 52" stroke="#E31837" stroke-width="4" stroke-linecap="round"/>
-          </g>
-
-          <!-- ── FIGURE 2: YOGA / WARRIOR POSE (centre, background) ── -->
-          <g transform="translate(185,80)" opacity="0.75">
-            <!-- Head -->
-            <circle cx="60" cy="24" r="15" fill="rgba(255,255,255,0.7)"/>
-            <!-- Torso (upright) -->
-            <path d="M60 39 L60 90" stroke="rgba(255,255,255,0.7)" stroke-width="7" stroke-linecap="round"/>
-            <!-- Arms outstretched (Warrior II) -->
-            <path d="M60 55 L18 64" stroke="rgba(255,255,255,0.7)" stroke-width="5.5" stroke-linecap="round"/>
-            <path d="M60 55 L102 46" stroke="rgba(255,255,255,0.7)" stroke-width="5.5" stroke-linecap="round"/>
-            <!-- Left leg (lunge) -->
-            <path d="M60 90 L30 130 L14 168" stroke="rgba(255,255,255,0.7)" stroke-width="6.5" stroke-linecap="round" fill="none"/>
-            <!-- Right leg (extended back) -->
-            <path d="M60 90 L90 125 L110 165" stroke="rgba(255,255,255,0.7)" stroke-width="6.5" stroke-linecap="round" fill="none"/>
-            <!-- Foot details -->
-            <path d="M14 168 L2 170" stroke="rgba(255,255,255,0.55)" stroke-width="4.5" stroke-linecap="round"/>
-            <path d="M110 165 L122 162" stroke="rgba(255,255,255,0.55)" stroke-width="4.5" stroke-linecap="round"/>
-            <!-- Red accent — waistband -->
-            <path d="M48 90 L72 88" stroke="#E31837" stroke-width="3.5" stroke-linecap="round"/>
-          </g>
-
-          <!-- ── FIGURE 3: CYCLIST (right, background) ── -->
-          <g transform="translate(300,140)" opacity="0.65">
-            <!-- Bike frame simplified -->
-            <ellipse cx="30" cy="145" rx="22" ry="22" stroke="rgba(255,255,255,0.5)" stroke-width="3" fill="none"/>
-            <ellipse cx="110" cy="145" rx="22" ry="22" stroke="rgba(255,255,255,0.5)" stroke-width="3" fill="none"/>
-            <line x1="30" y1="145" x2="110" y2="145" stroke="rgba(255,255,255,0.4)" stroke-width="2.5"/>
-            <path d="M70 145 L90 110 L110 145" stroke="rgba(255,255,255,0.5)" stroke-width="2.5" fill="none"/>
-            <path d="M70 145 L50 110" stroke="rgba(255,255,255,0.5)" stroke-width="2.5"/>
-            <line x1="50" y1="110" x2="90" y2="110" stroke="rgba(255,255,255,0.4)" stroke-width="2"/>
-            <!-- Head -->
-            <circle cx="70" cy="70" r="14" fill="rgba(255,255,255,0.65)"/>
-            <!-- Torso (bent forward) -->
-            <path d="M70 84 L70 110" stroke="rgba(255,255,255,0.65)" stroke-width="6" stroke-linecap="round"/>
-            <!-- Arms to handlebar -->
-            <path d="M70 92 L50 110" stroke="rgba(255,255,255,0.65)" stroke-width="5" stroke-linecap="round"/>
-            <!-- Legs on pedals -->
-            <path d="M70 110 L58 132" stroke="rgba(255,255,255,0.65)" stroke-width="5.5" stroke-linecap="round"/>
-            <path d="M70 110 L82 128" stroke="rgba(255,255,255,0.65)" stroke-width="5.5" stroke-linecap="round"/>
-            <!-- Red accent — helmet stripe -->
-            <path d="M60 67 L68 64" stroke="#E31837" stroke-width="3" stroke-linecap="round"/>
-          </g>
-
-          <!-- ── Decorative elements ── -->
-          <!-- Small motion dots (runner trail) -->
-          <circle cx="95" cy="280" r="3" fill="rgba(227,24,55,0.4)"/>
-          <circle cx="82" cy="292" r="2" fill="rgba(227,24,55,0.25)"/>
-          <circle cx="70" cy="302" r="1.5" fill="rgba(227,24,55,0.15)"/>
-
-          <!-- Swoosh arc (brand feel) -->
-          <path d="M30 420 Q240 360 450 400" stroke="rgba(227,24,55,0.18)" stroke-width="2" fill="none" stroke-dasharray="6 4"/>
-
-          <!-- Corner accent lines (energy lines) -->
-          <line x1="400" y1="60" x2="460" y2="40" stroke="rgba(227,24,55,0.2)" stroke-width="1.5" stroke-linecap="round"/>
-          <line x1="410" y1="72" x2="460" y2="60" stroke="rgba(227,24,55,0.12)" stroke-width="1" stroke-linecap="round"/>
-          <line x1="420" y1="82" x2="455" y2="76" stroke="rgba(227,24,55,0.08)" stroke-width="0.8" stroke-linecap="round"/>
-
-          <defs>
-            <radialGradient id="heroGlow" cx="50%" cy="50%" r="50%">
-              <stop offset="0%" stop-color="#E31837" stop-opacity="0.12"/>
-              <stop offset="100%" stop-color="#E31837" stop-opacity="0"/>
-            </radialGradient>
-          </defs>
-        </svg>
+        <!-- 2×2 photo grid with one tall cell -->
+        <div class="hero-photo-grid">
+          <!-- Tall left cell: yoga/warrior -->
+          <div class="photo-cell tall">
+            <img
+              src="https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=600&q=80&fit=crop&crop=center"
+              alt="Athlete in yoga pose"
+              loading="eager"
+            />
+          </div>
+          <!-- Top right: runner -->
+          <div class="photo-cell">
+            <img
+              src="https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=600&q=80&fit=crop&crop=top"
+              alt="Athlete running outdoors"
+              loading="eager"
+            />
+          </div>
+          <!-- Bottom right: fitness/HIIT -->
+          <div class="photo-cell">
+            <img
+              src="https://images.unsplash.com/photo-1518310383802-640c2de311b2?w=600&q=80&fit=crop&crop=center"
+              alt="Athlete in fitness training"
+              loading="eager"
+            />
+          </div>
+        </div>
 
         <!-- Floating stat pills -->
-        <div class="scene-stat" style="top:8%;left:2%" aria-label="119% ROI metric">
+        <div class="scene-stat" style="top:-16px;left:-20px;" aria-label="119% ROI">
           <span class="s-num">119%</span>
-          <span class="s-label">3-Year ROI</span>
+          <span class="s-label">3-Year ROI · Forrester</span>
         </div>
-        <div class="scene-stat" style="bottom:22%;right:0%" aria-label="45% conversion lift metric">
+        <div class="scene-stat" style="bottom:120px;right:-24px;" aria-label="+45% conversion lift">
           <span class="s-num">+45%</span>
           <span class="s-label">Conversion Lift</span>
         </div>
-        <div class="scene-stat" style="bottom:5%;left:12%" aria-label="99.99% uptime metric">
+        <div class="scene-stat" style="bottom:-16px;left:50%;transform:translateX(-50%);" aria-label="99.99% peak uptime">
           <span class="s-num">99.99%</span>
-          <span class="s-label">Peak Uptime</span>
+          <span class="s-label">Peak Uptime · Cyber Week 2025</span>
         </div>
 
       </div>
