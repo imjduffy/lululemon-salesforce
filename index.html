@@ -160,6 +160,43 @@
     font-size: 14px;
   }
 
+  /* ── Mission Strip ── */
+  .mission-strip {
+    background: var(--navy);
+    border-bottom: 1px solid rgba(255,255,255,.07);
+    padding: 10px 0;
+    overflow: hidden;
+  }
+  .mission-strip-inner {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    white-space: nowrap;
+  }
+  .mission-track {
+    display: flex;
+    gap: 0;
+    animation: marquee 28s linear infinite;
+  }
+  .mission-track:hover { animation-play-state: paused; }
+  @keyframes marquee {
+    0%   { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+  }
+  .mission-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 0 36px;
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .1em;
+    color: rgba(255,255,255,.45);
+  }
+  .mission-item svg { flex-shrink: 0; opacity: .6; }
+  .mission-item span { color: rgba(255,255,255,.65); }
+
   /* ══════════════════════════════════════════
      2. HERO
   ══════════════════════════════════════════ */
@@ -167,7 +204,7 @@
     background: var(--navy);
     overflow: hidden;
     position: relative;
-    min-height: 640px;
+    min-height: 680px;
     display: flex;
     align-items: center;
   }
@@ -176,12 +213,34 @@
     position: absolute;
     inset: 0;
     background:
-      radial-gradient(ellipse 60% 80% at 70% 50%, rgba(227,24,55,.18) 0%, transparent 70%),
-      radial-gradient(ellipse 40% 60% at 90% 10%, rgba(227,24,55,.1) 0%, transparent 60%);
+      radial-gradient(ellipse 70% 90% at 75% 60%, rgba(227,24,55,.15) 0%, transparent 65%),
+      radial-gradient(ellipse 40% 50% at 95% 5%, rgba(227,24,55,.08) 0%, transparent 55%),
+      radial-gradient(ellipse 50% 60% at 20% 90%, rgba(255,255,255,.03) 0%, transparent 60%);
+  }
+  /* Floating motion lines behind hero */
+  .hero-motion-bg {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    pointer-events: none;
+    z-index: 0;
+  }
+  .motion-arc {
+    position: absolute;
+    border-radius: 50%;
+    border: 1px solid rgba(227,24,55,.12);
+    animation: pulse-arc 6s ease-in-out infinite;
+  }
+  .motion-arc:nth-child(1) { width: 600px; height: 600px; top: -200px; right: -100px; animation-delay: 0s; }
+  .motion-arc:nth-child(2) { width: 400px; height: 400px; top: -50px; right: 50px; border-color: rgba(227,24,55,.08); animation-delay: 1.5s; }
+  .motion-arc:nth-child(3) { width: 800px; height: 800px; top: -350px; right: -200px; border-color: rgba(255,255,255,.04); animation-delay: 3s; }
+  @keyframes pulse-arc {
+    0%, 100% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.04); opacity: .6; }
   }
   .hero-inner {
     position: relative;
-    z-index: 1;
+    z-index: 2;
     max-width: var(--max-w);
     margin: 0 auto;
     padding: 96px 40px;
@@ -247,38 +306,53 @@
     margin-top: 4px;
     line-height: 1.4;
   }
-  /* Hero Visual */
+  /* Hero Visual — Athletic Scene */
   .hero-visual {
     display: flex;
     align-items: center;
     justify-content: center;
+    position: relative;
   }
-  .hero-card-stack {
+  .hero-athletic-scene {
     position: relative;
     width: 100%;
-    max-width: 420px;
+    max-width: 480px;
   }
-  .hero-card {
-    background: rgba(255,255,255,.06);
-    border: 1px solid rgba(255,255,255,.12);
-    border-radius: var(--radius);
-    padding: 28px;
-    backdrop-filter: blur(8px);
+  .athletic-scene-svg {
+    width: 100%;
+    height: auto;
+    filter: drop-shadow(0 24px 48px rgba(0,0,0,.4));
   }
-  .hero-card-main {
-    position: relative;
-    z-index: 2;
-  }
-  .hero-card-behind {
+  /* Floating stat pills over the scene */
+  .scene-stat {
     position: absolute;
-    top: -16px;
-    right: -16px;
-    left: 16px;
-    background: rgba(227,24,55,.12);
-    border: 1px solid rgba(227,24,55,.2);
-    border-radius: var(--radius);
-    height: 100%;
-    z-index: 1;
+    background: rgba(15,23,42,.85);
+    border: 1px solid rgba(255,255,255,.12);
+    border-radius: 12px;
+    padding: 12px 18px;
+    backdrop-filter: blur(12px);
+    animation: float 4s ease-in-out infinite;
+  }
+  .scene-stat:nth-child(2) { animation-delay: 1.3s; }
+  .scene-stat:nth-child(3) { animation-delay: 2.6s; }
+  @keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-6px); }
+  }
+  .scene-stat .s-num {
+    font-family: 'Figtree', sans-serif;
+    font-size: 20px;
+    font-weight: 900;
+    color: var(--cyan);
+    display: block;
+    line-height: 1;
+  }
+  .scene-stat .s-label {
+    font-size: 11px;
+    color: rgba(255,255,255,.55);
+    font-weight: 500;
+    margin-top: 3px;
+    display: block;
   }
   .metric-row {
     display: flex;
@@ -1344,10 +1418,74 @@
   </div>
 </nav>
 
+<!-- ── Mission Strip ── -->
+<div class="mission-strip" aria-label="lululemon mission values" role="marquee">
+  <div class="mission-strip-inner">
+    <div class="mission-track" aria-hidden="true">
+      <!-- Set 1 -->
+      <div class="mission-item">
+        <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="#E31837" stroke-width="2.5"><path d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+        <span>Be Human. Be Well. Be lululemon.</span>
+      </div>
+      <div class="mission-item">
+        <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="#E31837" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+        <span>Elevate the World from Mediocrity</span>
+      </div>
+      <div class="mission-item">
+        <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="#E31837" stroke-width="2.5"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+        <span>Sweat Life — Move. Grow. Connect.</span>
+      </div>
+      <div class="mission-item">
+        <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="#E31837" stroke-width="2.5"><path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+        <span>Technical Athleticwear · Global Community</span>
+      </div>
+      <div class="mission-item">
+        <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="#E31837" stroke-width="2.5"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg>
+        <span>Mindful Movement · Purposeful Design</span>
+      </div>
+      <div class="mission-item">
+        <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="#E31837" stroke-width="2.5"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        <span>$1B+ Online · 600+ Stores Worldwide</span>
+      </div>
+      <!-- Set 2 (duplicate for seamless loop) -->
+      <div class="mission-item">
+        <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="#E31837" stroke-width="2.5"><path d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+        <span>Be Human. Be Well. Be lululemon.</span>
+      </div>
+      <div class="mission-item">
+        <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="#E31837" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+        <span>Elevate the World from Mediocrity</span>
+      </div>
+      <div class="mission-item">
+        <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="#E31837" stroke-width="2.5"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+        <span>Sweat Life — Move. Grow. Connect.</span>
+      </div>
+      <div class="mission-item">
+        <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="#E31837" stroke-width="2.5"><path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+        <span>Technical Athleticwear · Global Community</span>
+      </div>
+      <div class="mission-item">
+        <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="#E31837" stroke-width="2.5"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg>
+        <span>Mindful Movement · Purposeful Design</span>
+      </div>
+      <div class="mission-item">
+        <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="#E31837" stroke-width="2.5"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        <span>$1B+ Online · 600+ Stores Worldwide</span>
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- ══════════════════════════════════════════
      2. HERO
 ══════════════════════════════════════════ -->
 <section class="hero" aria-label="Hero">
+  <!-- Animated arc background -->
+  <div class="hero-motion-bg" aria-hidden="true">
+    <div class="motion-arc"></div>
+    <div class="motion-arc"></div>
+    <div class="motion-arc"></div>
+  </div>
   <div class="hero-inner">
     <div class="hero-content fade-up">
       <div class="hero-label" aria-label="Context label">
@@ -1385,31 +1523,121 @@
         </div>
       </div>
     </div>
-    <div class="hero-visual fade-up" aria-hidden="true">
-      <div class="hero-card-stack">
-        <div class="hero-card-behind"></div>
-        <div class="hero-card hero-card-main">
-          <div class="card-title">Commerce Performance — Real-Time</div>
-          <div class="metric-row">
-            <span class="metric-label">Online Conversion Rate</span>
-            <span class="metric-value green">+45%</span>
-          </div>
-          <div class="metric-bar"><div class="metric-bar-fill" style="width:85%"></div></div>
-          <div class="metric-row" style="margin-top:24px">
-            <span class="metric-label">Order Servicing Time</span>
-            <span class="metric-value red">−40%</span>
-          </div>
-          <div class="metric-bar"><div class="metric-bar-fill" style="width:60%"></div></div>
-          <div class="metric-row" style="margin-top:24px">
-            <span class="metric-label">Peak Uptime SLA</span>
-            <span class="metric-value" style="color:#34D399">99.99%</span>
-          </div>
-          <div class="metric-bar"><div class="metric-bar-fill" style="width:99%"></div></div>
-          <div style="margin-top:28px;padding-top:20px;border-top:1px solid rgba(255,255,255,.1)">
-            <div style="font-size:12px;color:rgba(255,255,255,.4);margin-bottom:6px">Platform</div>
-            <div style="font-size:14px;font-weight:600;color:rgba(255,255,255,.8)">Salesforce B2C Commerce + OMS</div>
-          </div>
+    <div class="hero-visual fade-up" aria-label="Athletic silhouettes representing lululemon's community in motion">
+      <div class="hero-athletic-scene">
+
+        <!-- Main SVG Athletic Scene -->
+        <svg class="athletic-scene-svg" viewBox="0 0 480 520" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Athletic figures in motion — runner, yoga practitioner, cyclist">
+
+          <!-- Background glow circle -->
+          <circle cx="240" cy="260" r="220" fill="url(#heroGlow)" opacity="0.5"/>
+
+          <!-- Ground arc -->
+          <ellipse cx="240" cy="490" rx="200" ry="18" fill="rgba(227,24,55,0.08)"/>
+
+          <!-- ── FIGURE 1: RUNNER (left, foreground) ── -->
+          <g transform="translate(60,120)">
+            <!-- Motion trail lines -->
+            <line x1="-30" y1="140" x2="10" y2="138" stroke="rgba(227,24,55,0.3)" stroke-width="1.5" stroke-linecap="round"/>
+            <line x1="-20" y1="148" x2="14" y2="147" stroke="rgba(227,24,55,0.2)" stroke-width="1" stroke-linecap="round"/>
+            <line x1="-10" y1="155" x2="8" y2="155" stroke="rgba(227,24,55,0.15)" stroke-width="0.8" stroke-linecap="round"/>
+            <!-- Head -->
+            <circle cx="80" cy="28" r="18" fill="rgba(255,255,255,0.9)"/>
+            <!-- Torso (leaning forward — running posture) -->
+            <path d="M80 46 L72 95 L68 140" stroke="rgba(255,255,255,0.85)" stroke-width="8" stroke-linecap="round" fill="none"/>
+            <!-- Left arm (pumping back) -->
+            <path d="M76 60 L48 88" stroke="rgba(255,255,255,0.85)" stroke-width="6" stroke-linecap="round"/>
+            <!-- Right arm (pumping forward) -->
+            <path d="M80 56 L108 44" stroke="rgba(255,255,255,0.85)" stroke-width="6" stroke-linecap="round"/>
+            <!-- Left leg (stride back) -->
+            <path d="M72 95 L54 130 L40 165" stroke="rgba(255,255,255,0.85)" stroke-width="7" stroke-linecap="round" fill="none"/>
+            <!-- Right leg (stride forward) -->
+            <path d="M68 95 L88 128 L110 152" stroke="rgba(255,255,255,0.85)" stroke-width="7" stroke-linecap="round" fill="none"/>
+            <!-- Foot detail -->
+            <path d="M40 165 L28 168" stroke="rgba(255,255,255,0.7)" stroke-width="5" stroke-linecap="round"/>
+            <path d="M110 152 L124 148" stroke="rgba(255,255,255,0.7)" stroke-width="5" stroke-linecap="round"/>
+            <!-- Red accent — shirt stripe -->
+            <path d="M72 55 L85 52" stroke="#E31837" stroke-width="4" stroke-linecap="round"/>
+          </g>
+
+          <!-- ── FIGURE 2: YOGA / WARRIOR POSE (centre, background) ── -->
+          <g transform="translate(185,80)" opacity="0.75">
+            <!-- Head -->
+            <circle cx="60" cy="24" r="15" fill="rgba(255,255,255,0.7)"/>
+            <!-- Torso (upright) -->
+            <path d="M60 39 L60 90" stroke="rgba(255,255,255,0.7)" stroke-width="7" stroke-linecap="round"/>
+            <!-- Arms outstretched (Warrior II) -->
+            <path d="M60 55 L18 64" stroke="rgba(255,255,255,0.7)" stroke-width="5.5" stroke-linecap="round"/>
+            <path d="M60 55 L102 46" stroke="rgba(255,255,255,0.7)" stroke-width="5.5" stroke-linecap="round"/>
+            <!-- Left leg (lunge) -->
+            <path d="M60 90 L30 130 L14 168" stroke="rgba(255,255,255,0.7)" stroke-width="6.5" stroke-linecap="round" fill="none"/>
+            <!-- Right leg (extended back) -->
+            <path d="M60 90 L90 125 L110 165" stroke="rgba(255,255,255,0.7)" stroke-width="6.5" stroke-linecap="round" fill="none"/>
+            <!-- Foot details -->
+            <path d="M14 168 L2 170" stroke="rgba(255,255,255,0.55)" stroke-width="4.5" stroke-linecap="round"/>
+            <path d="M110 165 L122 162" stroke="rgba(255,255,255,0.55)" stroke-width="4.5" stroke-linecap="round"/>
+            <!-- Red accent — waistband -->
+            <path d="M48 90 L72 88" stroke="#E31837" stroke-width="3.5" stroke-linecap="round"/>
+          </g>
+
+          <!-- ── FIGURE 3: CYCLIST (right, background) ── -->
+          <g transform="translate(300,140)" opacity="0.65">
+            <!-- Bike frame simplified -->
+            <ellipse cx="30" cy="145" rx="22" ry="22" stroke="rgba(255,255,255,0.5)" stroke-width="3" fill="none"/>
+            <ellipse cx="110" cy="145" rx="22" ry="22" stroke="rgba(255,255,255,0.5)" stroke-width="3" fill="none"/>
+            <line x1="30" y1="145" x2="110" y2="145" stroke="rgba(255,255,255,0.4)" stroke-width="2.5"/>
+            <path d="M70 145 L90 110 L110 145" stroke="rgba(255,255,255,0.5)" stroke-width="2.5" fill="none"/>
+            <path d="M70 145 L50 110" stroke="rgba(255,255,255,0.5)" stroke-width="2.5"/>
+            <line x1="50" y1="110" x2="90" y2="110" stroke="rgba(255,255,255,0.4)" stroke-width="2"/>
+            <!-- Head -->
+            <circle cx="70" cy="70" r="14" fill="rgba(255,255,255,0.65)"/>
+            <!-- Torso (bent forward) -->
+            <path d="M70 84 L70 110" stroke="rgba(255,255,255,0.65)" stroke-width="6" stroke-linecap="round"/>
+            <!-- Arms to handlebar -->
+            <path d="M70 92 L50 110" stroke="rgba(255,255,255,0.65)" stroke-width="5" stroke-linecap="round"/>
+            <!-- Legs on pedals -->
+            <path d="M70 110 L58 132" stroke="rgba(255,255,255,0.65)" stroke-width="5.5" stroke-linecap="round"/>
+            <path d="M70 110 L82 128" stroke="rgba(255,255,255,0.65)" stroke-width="5.5" stroke-linecap="round"/>
+            <!-- Red accent — helmet stripe -->
+            <path d="M60 67 L68 64" stroke="#E31837" stroke-width="3" stroke-linecap="round"/>
+          </g>
+
+          <!-- ── Decorative elements ── -->
+          <!-- Small motion dots (runner trail) -->
+          <circle cx="95" cy="280" r="3" fill="rgba(227,24,55,0.4)"/>
+          <circle cx="82" cy="292" r="2" fill="rgba(227,24,55,0.25)"/>
+          <circle cx="70" cy="302" r="1.5" fill="rgba(227,24,55,0.15)"/>
+
+          <!-- Swoosh arc (brand feel) -->
+          <path d="M30 420 Q240 360 450 400" stroke="rgba(227,24,55,0.18)" stroke-width="2" fill="none" stroke-dasharray="6 4"/>
+
+          <!-- Corner accent lines (energy lines) -->
+          <line x1="400" y1="60" x2="460" y2="40" stroke="rgba(227,24,55,0.2)" stroke-width="1.5" stroke-linecap="round"/>
+          <line x1="410" y1="72" x2="460" y2="60" stroke="rgba(227,24,55,0.12)" stroke-width="1" stroke-linecap="round"/>
+          <line x1="420" y1="82" x2="455" y2="76" stroke="rgba(227,24,55,0.08)" stroke-width="0.8" stroke-linecap="round"/>
+
+          <defs>
+            <radialGradient id="heroGlow" cx="50%" cy="50%" r="50%">
+              <stop offset="0%" stop-color="#E31837" stop-opacity="0.12"/>
+              <stop offset="100%" stop-color="#E31837" stop-opacity="0"/>
+            </radialGradient>
+          </defs>
+        </svg>
+
+        <!-- Floating stat pills -->
+        <div class="scene-stat" style="top:8%;left:2%" aria-label="119% ROI metric">
+          <span class="s-num">119%</span>
+          <span class="s-label">3-Year ROI</span>
         </div>
+        <div class="scene-stat" style="bottom:22%;right:0%" aria-label="45% conversion lift metric">
+          <span class="s-num">+45%</span>
+          <span class="s-label">Conversion Lift</span>
+        </div>
+        <div class="scene-stat" style="bottom:5%;left:12%" aria-label="99.99% uptime metric">
+          <span class="s-num">99.99%</span>
+          <span class="s-label">Peak Uptime</span>
+        </div>
+
       </div>
     </div>
   </div>
